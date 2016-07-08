@@ -1,0 +1,23 @@
+### Init
+
+mutex = Semaphore(1)
+items = Semaphore(0)
+spaces = Semaphore(buffer.size())
+
+### Consumer
+
+items.wait() # wait until item available to process
+mutex.wait() # mutex when accessing buffer
+event = buffer.get()
+mutex.signal()
+spaces.signal() # new open space in buffer
+event.process()
+
+### Producer
+
+event = waitForEvent()
+spaces.wait() # wait until buffer has an open space
+mutex.wait()
+buffer.add(event)
+mutex.signal()
+items.signal()
